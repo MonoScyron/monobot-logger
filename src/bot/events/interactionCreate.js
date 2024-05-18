@@ -113,8 +113,6 @@ module.exports = {
               const commandName = command.name
               const userId = interaction.member.id
               const cooldowns = global.bot.cooldowns[commandName]
-              global.logger.info(`cmdhdlr: ${commandName}`) // TODO: Delete
-              global.logger.info(`cmdhdlr: ${JSON.stringify(cooldowns)}`) // TODO: Delete
               if (cooldowns) {
                 if (cooldowns.has(userId)) {
                   const expirationTime = cooldowns.get(userId) + command.cooldown
