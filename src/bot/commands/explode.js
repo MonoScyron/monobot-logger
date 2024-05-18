@@ -13,7 +13,8 @@ module.exports = {
     encoder.setDelay(10)
     encoder.setRepeat(0)
     encoder.start()
-
+    
+    // TODO: Fix transparency issue
     for (let i = 1; i < 17; i++) {
       const layer = await loadImage(`assets/explosion/${i}.png`)
       ctx.drawImage(pfp, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
@@ -30,5 +31,6 @@ module.exports = {
   quickHelp: 'Boom.',
   examples: `\`${process.env.GLOBAL_BOT_PREFIX}explode\``,
   type: 'any',
-  category: 'General'
+  category: 'General',
+  cooldown: 10000
 }

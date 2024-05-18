@@ -39,7 +39,10 @@ module.exports = {
           slashCommands = fs.readdirSync(path.resolve('src', 'bot', 'slashcommands')).map(filename => {
             return require(path.resolve('src', 'bot', 'slashcommands', filename))
           })
-          interaction.createMessage({ content: '🆗 reloaded slash commands', flags: Eris.Constants.MessageFlags.EPHEMERAL }).catch(() => {})
+          interaction.createMessage({
+            content: '🆗 reloaded slash commands',
+            flags: Eris.Constants.MessageFlags.EPHEMERAL
+          }).catch(() => {})
           resolve()
         }
         const command = slashCommands.find(c => c.name === interaction.data.name)
@@ -107,6 +110,22 @@ module.exports = {
           if (guild) {
             global.logger.info(`${interaction.member.username}#${interaction.member.discriminator} (${interaction.member.id}) in ${interaction.channel.id} sent /${command.name}. The guild is called "${guild.name}", owned by ${guild.ownerID} and has ${guild.memberCount} members.`)
             try {
+              const commandName = command.name
+              const userId = interaction.member.id
+              const cooldowns = global.bot.cooldowns[commandName]
+              global.logger.info(`cmdhdlr: ${commandName}`) // TODO: Delete
+              global.logger.info(`cmdhdlr: ${JSON.stringify(cooldowns)}`) // TODO: Delete
+              if (cooldowns) {
+                if (cooldowns.has(userId)) {
+                  const expirationTime = cooldowns.get(userId) + command.cooldown
+                  if (Date.now() < expirationTime) {
+                    const timeLeft = (expirationTime - Date.now()) / 1000
+                    interaction.createMessage(`Command "${commandName}" is on cooldown for <@${userId}>! (${timeLeft.toFixed(1)}s left)`)
+                    return
+                  }
+                }
+                cooldowns.set(userId, Date.now())
+              }
               command.func(interaction)
             } catch (commandError) {
               global.logger.error(commandError) // we do want this to reach sentry if failed

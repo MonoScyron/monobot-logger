@@ -56,6 +56,7 @@ async function init () {
   global.bot.commands = {}
   global.bot.ignoredChannels = []
   global.bot.guildSettingsCache = {}
+  global.bot.cooldowns = {}
 
   indexCommands() // yes, block the thread while we read commands.
   await cacheGuildInfo()
@@ -76,7 +77,7 @@ process.on('exit', (code) => {
   }
 })
 
-process.on('SIGINT', async () => {
+process.on('SIGINT', async() => {
   global.logger.error('SIGINT caught. Cleaning up and exiting...')
   require('../db/clients/postgres').end()
   process.exit()

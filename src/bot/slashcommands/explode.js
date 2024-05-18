@@ -4,6 +4,7 @@ const GIFEncoder = require('gifencoder')
 
 module.exports = {
   name: 'explode',
+  cooldown: 10000,
   func: async interaction => {
     try {
       const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
@@ -16,6 +17,7 @@ module.exports = {
       encoder.setRepeat(0)
       encoder.start()
 
+      // TODO: Fix transparency issue
       for (let i = 1; i < 17; i++) {
         const layer = await loadImage(`assets/explosion/${i}.png`)
         ctx.drawImage(pfp, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
@@ -27,7 +29,6 @@ module.exports = {
       const buffer = Buffer.from(encoder.out.getData())
 
       await interaction.createMessage({}, { file: buffer, name: 'boom.gif' })
-    }
-    catch (_) {}
+    } catch (_) {}
   }
 }

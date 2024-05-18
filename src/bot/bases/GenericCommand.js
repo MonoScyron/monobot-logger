@@ -26,6 +26,11 @@ class GenericCommand {
     this.hidden = !!data.hidden
     this.noThread = !!data.noThread
 
+    this.cooldown = data.cooldown
+    if (data.cooldown) {
+      global.bot.cooldowns[data.name] = new Map()
+    }
+
     global.bot.commands[data.name] = this
   }
 
