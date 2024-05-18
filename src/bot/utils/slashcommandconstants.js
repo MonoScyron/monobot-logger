@@ -2,6 +2,10 @@ const ERIS_CONSTANTS = require('eris').Constants
 
 exports.commands = [
   {
+    name: 'explode',
+    description: 'Boom.'
+  },
+  {
     name: 'ping',
     description: 'Is the bot still alive? Find out using this!'
   },

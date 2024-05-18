@@ -1,3 +1,5 @@
+exports.CANVAS_SIZE = 128
+
 exports.ALL_EVENTS = [
   'channelCreate',
   'channelUpdate',
