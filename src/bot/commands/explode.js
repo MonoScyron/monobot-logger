@@ -19,7 +19,6 @@ module.exports = {
     encoder.setRepeat(0)
     encoder.start()
 
-    // TODO: Fix transparency issue
     for (let i = 1; i < 17; i++) {
       const layer = await loadImage(`assets/explosion/${i}.png`)
       ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
