@@ -40,8 +40,6 @@ function processCommand (message, commandName, suffix) {
     message.channel.createMessage(`This command requires you to be the owner of the server, or have the following permissions: ${command.perms.join(', ')}`)
     return
   }
-  global.logger.info(`${message.author.username}#${message.author.discriminator} (${userId}) in ${message.channel.id} sent ${commandName} with the args "${suffix}". The guild is called "${message.channel.guild.name}", owned by ${message.channel.guild.ownerID} and has ${message.channel.guild.memberCount} members.`)
-  statAggregator.incrementCommand(command.name)
 
   const cooldowns = global.bot.cooldowns[commandName]
   if (cooldowns) {
@@ -55,6 +53,9 @@ function processCommand (message, commandName, suffix) {
     }
     cooldowns.set(userId, Date.now())
   }
+
+  global.logger.info(`${message.author.username}#${message.author.discriminator} (${userId}) in ${message.channel.id} sent ${commandName} with the args "${suffix}". The guild is called "${message.channel.guild.name}", owned by ${message.channel.guild.ownerID} and has ${message.channel.guild.memberCount} members.`)
+  statAggregator.incrementCommand(command.name)
 
   command.func(message, suffix)
 }

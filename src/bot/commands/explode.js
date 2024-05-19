@@ -4,11 +4,9 @@ const { CANVAS_SIZE } = require('../utils/constants')
 
 module.exports = {
   func: async message => {
-    let pfp = null
+    let pfp = await loadImage(message.member.user.avatarURL)
     if (message.mentions.length > 0) {
       pfp = await loadImage(message.mentions[0].avatarURL)
-    } else {
-      pfp = await loadImage(message.member.user.avatarURL)
     }
     const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
     const ctx = canvas.getContext('2d')
@@ -30,7 +28,9 @@ module.exports = {
     encoder.finish()
     const buffer = Buffer.from(encoder.out.getData())
 
-    await message.channel.createMessage({}, { file: buffer, name: 'boom.gif' })
+    await message.channel.createMessage({
+      messageReference: { messageID: message.id }
+    }, { file: buffer, name: 'boom.gif' })
   },
   name: 'explode',
   quickHelp: 'Boom.',

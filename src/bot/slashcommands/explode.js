@@ -7,13 +7,10 @@ module.exports = {
   cooldown: 30000,
   func: async interaction => {
     try {
-      let pfp = null
+      let pfp = await loadImage(interaction.member.user.avatarURL)
       const userInteractionOpt = interaction.data.options?.find(o => o.name === 'user')
       if (userInteractionOpt) {
         pfp = await loadImage(interaction.data.resolved.members.get(userInteractionOpt.value).avatarURL)
-      } else {
-        global.logger.info('No data!')
-        pfp = await loadImage(interaction.member.user.avatarURL)
       }
       const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
       const ctx = canvas.getContext('2d')

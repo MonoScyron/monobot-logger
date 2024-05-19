@@ -66,26 +66,6 @@ module.exports = {
             }).catch(() => {})
             return
           }
-          if (command.userPerms && command.userPerms.length !== 0) {
-            const userChannelPerms = interaction.channel.permissionsOf(interaction.member.user.id).json
-            const missingPermissions = command.userPerms.filter(bpName => !userChannelPerms[bpName])
-            if (missingPermissions.length !== 0) {
-              interaction.createMessage({
-                embeds: [{
-                  title: 'Missing Permissions',
-                  color: EMBED_COLORS.YELLOW_ORANGE,
-                  description: `You are missing the following permissions to run ${command.name}: ${missingPermissions.map(perm => `\`${perm}\``).join(', ')}`,
-                  footer: getEmbedFooter(global.bot.user),
-                  author: getAuthorField(interaction.member.user),
-                  thumbnail: {
-                    url: interaction.member.user.dynamicAvatarURL(null, 64)
-                  }
-                }],
-                flags: Eris.Constants.MessageFlags.EPHEMERAL
-              }).catch(() => {})
-              return
-            }
-          }
           if (command.botPerms && command.botPerms.length !== 0) {
             const botChannelPermissions = interaction.channel.permissionsOf(global.bot.user.id).json
             const missingPermissions = command.botPerms.filter(bpName => !botChannelPermissions[bpName])
@@ -106,23 +86,59 @@ module.exports = {
               return
             }
           }
+          if (interaction.member.user.id !== process.env.CREATOR_IDS && command.userPerms && command.userPerms.length !== 0) {
+            const userChannelPerms = interaction.channel.permissionsOf(interaction.member.user.id).json
+            const missingPermissions = command.userPerms.filter(bpName => !userChannelPerms[bpName])
+            if (missingPermissions.length !== 0) {
+              interaction.createMessage({
+                embeds: [{
+                  title: 'Missing Permissions',
+                  color: EMBED_COLORS.YELLOW_ORANGE,
+                  description: `You are missing the following permissions to run ${command.name}: ${missingPermissions.map(perm => `\`${perm}\``).join(', ')}`,
+                  footer: getEmbedFooter(global.bot.user),
+                  author: getAuthorField(interaction.member.user),
+                  thumbnail: {
+                    url: interaction.member.user.dynamicAvatarURL(null, 64)
+                  }
+                }],
+                flags: Eris.Constants.MessageFlags.EPHEMERAL
+              }).catch(() => {})
+              return
+            }
+          }
           const guild = global.bot.guilds.get(interaction.guildID)
           if (guild) {
             global.logger.info(`${interaction.member.username}#${interaction.member.discriminator} (${interaction.member.id}) in ${interaction.channel.id} sent /${command.name}. The guild is called "${guild.name}", owned by ${guild.ownerID} and has ${guild.memberCount} members.`)
             try {
-              const commandName = command.name
-              const userId = interaction.member.id
-              const cooldowns = global.bot.cooldowns[commandName]
-              if (cooldowns) {
-                if (cooldowns.has(userId)) {
-                  const expirationTime = cooldowns.get(userId) + command.cooldown
-                  if (Date.now() < expirationTime) {
-                    const timeLeft = (expirationTime - Date.now()) / 1000
-                    interaction.createMessage(`Command "${commandName}" is on cooldown for <@${userId}>! (${timeLeft.toFixed(1)}s left)`)
-                    return
+              if (interaction.member.user.id !== process.env.CREATOR_IDS) {
+                const commandName = command.name
+                const userId = interaction.member.id
+                const cooldowns = global.bot.cooldowns[commandName]
+                if (cooldowns) {
+                  if (cooldowns.has(userId)) {
+                    const expirationTime = cooldowns.get(userId) + command.cooldown
+                    if (Date.now() < expirationTime) {
+                      const timeLeft = (expirationTime - Date.now()) / 1000
+                      interaction.createMessage({
+                        embeds: [{
+                          title: 'That command is on cooldown for you!',
+                          color: EMBED_COLORS.YELLOW_ORANGE,
+                          description: `**Cooldown:** ${timeLeft.toFixed(1)}s left`,
+                          footer: getEmbedFooter(global.bot.user),
+                          author: getAuthorField(interaction.member.user),
+                          thumbnail: {
+                            url: global.bot.user.dynamicAvatarURL(null, 64)
+                          }
+                        }],
+                        flags: Eris.Constants.MessageFlags.EPHEMERAL
+                      }).catch(() => {})
+                      return
+                    }
                   }
+                  cooldowns.set(userId, Date.now())
                 }
-                cooldowns.set(userId, Date.now())
+              } else {
+                global.logger.info(`Developer override by ${interaction.member.username}#${interaction.member.discriminator} at ${new Date().toUTCString()}`)
               }
               command.func(interaction)
             } catch (commandError) {
