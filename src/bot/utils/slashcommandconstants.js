@@ -1,9 +1,34 @@
+const { FALSE } = require('pg-format/lib/reserved')
 const ERIS_CONSTANTS = require('eris').Constants
 
 exports.commands = [
   {
     name: 'explode',
-    description: 'Boom.'
+    description: 'Boom.',
+    options: [
+      {
+        type: ERIS_CONSTANTS.ApplicationCommandOptionTypes.USER,
+        name: 'user',
+        description: 'User to blow up'
+      }
+    ]
+  },
+  {
+    name: 'Warn',
+    description: '"Warn" a user for doing something bad.',
+    options: [
+      {
+        type: ERIS_CONSTANTS.ApplicationCommandOptionTypes.USER,
+        name: 'user',
+        description: 'User to "warn"'
+      },
+      {
+        type: ERIS_CONSTANTS.ApplicationCommandOptionTypes.STRING,
+        name: 'reason',
+        description: 'Proof for "warning"',
+        required: true
+      }
+    ]
   },
   {
     name: 'ping',

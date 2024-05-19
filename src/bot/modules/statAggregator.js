@@ -18,7 +18,8 @@ const commandStatistics = {
   togglemodule: 0,
   userinfo: 0,
   setup: 0,
-  explode: 0
+  explode: 0,
+  warn: 0
 }
 
 const eventStatistics = {
