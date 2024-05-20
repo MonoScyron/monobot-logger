@@ -4,9 +4,10 @@ const { CANVAS_SIZE } = require('../utils/constants')
 
 module.exports = {
   func: async message => {
-    let pfp = await loadImage(message.member.user.avatarURL)
+    let pfp = await loadImage(message.member.avatarURL)
     if (message.mentions.length > 0) {
-      pfp = await loadImage(message.mentions[0].avatarURL)
+      const member = await message.channel.guild.fetchMembers({ userIDs: [message.mentions[0].id] })
+      pfp = await loadImage(member[0].avatarURL)
     }
     const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE)
     const ctx = canvas.getContext('2d')

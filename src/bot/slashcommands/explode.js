@@ -7,7 +7,7 @@ module.exports = {
   cooldown: 30000,
   func: async interaction => {
     try {
-      let pfp = await loadImage(interaction.member.user.avatarURL)
+      let pfp = await loadImage(interaction.member.avatarURL)
       const userInteractionOpt = interaction.data.options?.find(o => o.name === 'user')
       if (userInteractionOpt) {
         pfp = await loadImage(interaction.data.resolved.members.get(userInteractionOpt.value).avatarURL)
