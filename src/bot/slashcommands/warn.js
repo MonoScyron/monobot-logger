@@ -14,12 +14,35 @@ module.exports = {
     }
 
     const embed = {
-      title: 'Warn result:',
-      description: `<:activity:1241213271172845649> **Reason:** ${reason}\n<:trustedAdmin:1241213273035112459> **Moderator:** <@${mod.id}> ${modIcon}`,
+      color: 12364603,
+      thumbnail: {
+        url: warnedMember.avatarURL,
+        height: 128,
+        width: 128
+      },
       fields: [
         {
-          name: 'Warned:',
-          value: `<:space:1241851810474364971><:success:1241213269746778122> ${warnedMember.username} [\`${warnedMember.id}\`]`
+          name: 'Case:',
+          value: '`420` <:success:1241213269746778122>',
+          inline: true
+        },
+        {
+          name: 'Type:',
+          value: '`Warn`',
+          inline: true
+        },
+        {
+          name: 'Moderator:',
+          value: `\`${mod.username}\` ${modIcon}`,
+          inline: true
+        },
+        {
+          name: 'Target:',
+          value: `<:rightSort:1241973714384322570> \`${warnedMember.username}\` <:ban:1241959180735217665>`
+        },
+        {
+          name: 'Reason:',
+          value: `${reason}`
         }
       ]
     }
