@@ -19,6 +19,7 @@ WORKDIR /opt/bot
 COPY *.js /opt/bot/
 COPY *.json /opt/bot/
 RUN npm i --production
+RUN npm i abalabahaha/eris#dev
 
 COPY *.md /opt/bot/
 COPY src /opt/bot/src
