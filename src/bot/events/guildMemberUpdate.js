@@ -67,7 +67,7 @@ module.exports = {
       guildMemberUpdate.embeds[0].color = 0x1ced9a
       delete guildMemberUpdate.embeds[0].fields
       await send(guildMemberUpdate)
-    } else if (oldMember && oldMember.roles && oldMember.premiumSince != member.premiumSince) {
+    } else if (oldMember && oldMember.roles && oldMember.premiumSince !== member.premiumSince) {
       const boostRole = guild.roles.find(r => r?.tags?.premium_subscriber === true)
       if (!boostRole) return
       const embedCopy = guildMemberUpdate
@@ -113,7 +113,7 @@ module.exports = {
       // Add a + or - emoji when roles are manipulated for a user, stringify it, and assign a field value to it.
       guildMemberUpdate.embeds[0].fields = [{
         name: 'Changes',
-        value: `${added.map(role => `${canUseExternal(guild) ? '<:greenplus:562826499929931776>' : '➕'} **${role.name}**`).join('\n')}${removed.map((role, i) => `${i === 0 && added.length !== 0 ? '\n' : ''}\n:x: **${role.name}**`).join('\n')}`
+        value: `${added.map(role => `${canUseExternal(guild) ? '<:greenplus:1226218721673220130>' : '➕'} **${role.name}**`).join('\n')}${removed.map((role, i) => `${i === 0 && added.length !== 0 ? '\n' : ''}\n:x: **${role.name}**`).join('\n')}`
       }]
       if (guildMemberUpdate.embeds[0].fields[0].value.length > 1000) {
         guildMemberUpdate.embeds[0].fields[0].value = guildMemberUpdate.embeds[0].fields[0].value.substring(0, 1020) + '...'
